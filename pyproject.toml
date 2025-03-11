@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "crm"
+version = "0.1.0"
+description = ""
+authors = ["Kejte"]
+
+
+[tool.poetry.dependencies]
+python = "^3.13"
+django = "^5.1.4"
+djangorestframework = "^3.15.2"
+environs = "^11.2.1"
+poetry-plugin-export = "^1.8.0"
+psycopg2-binary = "^2.9.10"
+gunicorn = "^23.0.0"
+pillow = "^11.1.0"
+drf-spectacular = "^0.28.0"
+drf-spectacular-sidecar = "^2024.12.1"
+setuptools = "^75.7.0"
+six = "^1.17.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
