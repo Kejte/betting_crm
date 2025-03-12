@@ -11,6 +11,10 @@ class Tariff(models.Model):
         verbose_name='Стоимость',
         help_text='Руб./мес'
     )
+    is_published = models.BooleanField(
+        verbose_name='Опубликовано?',
+        default=False
+    )
 
     def __str__(self):
         return f'Тариф {self.title}'

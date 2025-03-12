@@ -24,7 +24,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'profiles.apps.ProfilesConfig',
     'drf_spectacular',
-    'drf_spectacular_sidecar'
+    'drf_spectacular_sidecar',
+    'payments.apps.PaymentsConfig'
 ]
 
 MIDDLEWARE = [

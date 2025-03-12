@@ -31,6 +31,10 @@ urlpatterns = [
     path(
         'api/profiles/',
         include('profiles.urls')
+    ),
+    path(
+        'api/payments/',
+        include('payments.urls')
     )
 ]
 urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
