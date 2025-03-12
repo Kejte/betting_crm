@@ -25,10 +25,8 @@ services:
     restart: unless-stopped
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=crm
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+    env_file:
+      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
   
