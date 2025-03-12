@@ -1,8 +1,25 @@
-.env
-
-db.sqlite3
-
 #cached files
-__pycache__
+__pycache__/
+.idea/
+.*_cache/
 
-*/migrations/
+#works files
+*.sqlite3
+.env
+.env.db
+requirements.txt
+grafana/
+minio/
+pgdata/
+parser_data/
+templates/
+logs/
+
+#all static
+/static
+/media
+/venv
+/data
+.log
+chunked_uploads/
+.python-version
