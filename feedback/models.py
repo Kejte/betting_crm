@@ -30,10 +30,7 @@ class TechSupportTicket(Ticket):
 class UpdateTicket(Ticket):
     class UpdateTicketStatusChoice(models.TextChoices):
         NEW = ('NW', 'Новое')
-        IN_WORK = ('WR', 'На рассмотрении')
-        VOTE = ('VT', 'Голосование')
         ACEPTED = ('AC', 'Принято')
-        CANCELED = ('CN', 'Отклонено')
     
     def __str__(self):
         return f'Предложение пользователя {self.profile.tg_id}'

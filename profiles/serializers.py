@@ -13,3 +13,9 @@ class CreateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('tg_id', 'username')
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Profile
+        fields = ('username',)

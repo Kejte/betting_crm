@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from profiles.models import Profile
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
-from profiles.serializers import ProfileSerializer, CreateProfileSerializer
+from profiles.serializers import ProfileSerializer, CreateProfileSerializer, UpdateProfileSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -44,4 +44,29 @@ class CreateProfileAPIView(APIView):
         if serializer.is_valid():
             profile = Profile.objects.create(**serializer.validated_data)
             return Response(ProfileSerializer(profile).data,200)
-        return Response(status=400)
+        return Response(serializer.errors,status=400)
+
+class UpdateProfileAPIView(APIView):
+    
+    @extend_schema(
+        request=CreateProfileSerializer,
+        responses={
+            200: CreateProfileSerializer,
+            400: None
+        },
+        parameters=[
+            OpenApiParameter(
+        name='tg_id',
+        type=OpenApiTypes.STR,
+        required=True
+    )
+        ]
+    )
+    def put(self, request: Request, *args, **kwargs):
+        serializer = UpdateProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            profile = Profile.objects.get(pk=request.query_params.get('tg_id'))
+            profile.username = serializer.validated_data.pop('username')
+            profile.save()
+            return Response(status=201)
+        return Response(serializer.errors,status=400)

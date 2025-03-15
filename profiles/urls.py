@@ -1,5 +1,5 @@
 from django.urls import path
-from profiles.apis import ProfileAPIView, CreateProfileAPIView
+from profiles.apis import ProfileAPIView, CreateProfileAPIView, UpdateProfileAPIView
 
 urlpatterns = [ 
     path(
@@ -9,5 +9,9 @@ urlpatterns = [
     path(
         'profile/create',
         CreateProfileAPIView.as_view()
+    ),
+    path(
+        'profile/update',
+        UpdateProfileAPIView.as_view()
     )
 ]
