@@ -1,7 +1,7 @@
 from django.db import models
 
 class Profile(models.Model):
-    tg_id = models.IntegerField(
+    tg_id = models.BigIntegerField(
         verbose_name='Телеграм айди',
         unique=True,
         primary_key=True
