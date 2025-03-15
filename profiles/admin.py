@@ -4,6 +4,6 @@ from profiles.models import Profile
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('tg_id',)
-    readonly_fields = ('tg_id',)
+    list_display = ('username', 'tg_id')
+    readonly_fields = ('tg_id', 'username')
     

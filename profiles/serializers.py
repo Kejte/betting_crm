@@ -6,10 +6,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('tg_id',)
+        fields = ('tg_id', 'username')
 
 class CreateProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ('tg_id',)
+        fields = ('tg_id', 'username')

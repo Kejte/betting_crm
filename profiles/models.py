@@ -6,6 +6,10 @@ class Profile(models.Model):
         unique=True,
         primary_key=True
     )
+    username = models.CharField(
+        verbose_name='Юзернейм',
+        default='@'
+    )
 
     def __str__(self):
         return f'{self.tg_id}'
