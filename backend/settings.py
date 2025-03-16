@@ -25,7 +25,8 @@ INSTALLED_APPS = [
     'profiles.apps.ProfilesConfig',
     'drf_spectacular',
     'drf_spectacular_sidecar',
-    'payments.apps.PaymentsConfig'
+    'payments.apps.PaymentsConfig',
+    'feedback.apps.FeedbackConfig'
 ]
 
 MIDDLEWARE = [
