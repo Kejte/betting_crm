@@ -51,23 +51,23 @@ class UpdateTicket(Ticket):
         verbose_name = 'Тикет на обновление'
         verbose_name_plural = 'Тикеты на обновления'
 
-class UpdateLog(models.Model):
-    created_at = models.DateTimeField(
-        verbose_name='Дата и время создания',
-        auto_now_add=True
-    )
-    text = models.TextField(
-        verbose_name='Текст'
-    )
-    is_published = models.BooleanField(
-        verbose_name='Опубликовано?',
-        default=False
-    )
+# class UpdateLog(models.Model):
+#     created_at = models.DateTimeField(
+#         verbose_name='Дата и время создания',
+#         auto_now_add=True
+#     )
+#     text = models.TextField(
+#         verbose_name='Текст'
+#     )
+#     is_published = models.BooleanField(
+#         verbose_name='Опубликовано?',
+#         default=False
+#     )
 
-    def __str__(self):
-        return f'Апдейт лог от {self.created_at}'
+#     def __str__(self):
+#         return f'Апдейт лог от {self.created_at}'
     
-    class Meta:
-        verbose_name='Апдейт лог'
-        verbose_name_plural='Апдейт логи'
+#     class Meta:
+#         verbose_name='Апдейт лог'
+#         verbose_name_plural='Апдейт логи'
         

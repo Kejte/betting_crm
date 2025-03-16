@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from feedback.models import TechSupportTicket, UpdateTicket, UpdateLog
+from feedback.models import TechSupportTicket, UpdateTicket# UpdateLog
 from profiles.models import Profile
 
 class TechSupportTicketSerializer(serializers.ModelSerializer):
@@ -20,8 +20,8 @@ class UpdateTicketSerializer(serializers.ModelSerializer):
         model = UpdateTicket
         fields = ('profile', 'text')
 
-class UpdateLogSerializer(serializers.ModelSerializer):
+# class UpdateLogSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = UpdateLog
-        exclude = ('id','is_published')
+#     class Meta:
+#         model = UpdateLog
+#         exclude = ('id','is_published')
