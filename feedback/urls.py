@@ -1,5 +1,5 @@
 from django.urls import path
-from feedback.apis import CreateTechSupportTicket, CreateUpdateTicketAPIView# UpdateLogAPIView
+from feedback.apis import CreateTechSupportTicket, CreateUpdateTicketAPIView, UpdateLogAPIView
 
 urlpatterns = [
     path(
@@ -10,8 +10,8 @@ urlpatterns = [
         'create_update_ticket',
         CreateUpdateTicketAPIView.as_view()
     ),
-    # path(
-    #     'update_log',
-    #     UpdateLogAPIView.as_view()
-    # )
+    path(
+        'update_log',
+        UpdateLogAPIView.as_view()
+    )
 ]
