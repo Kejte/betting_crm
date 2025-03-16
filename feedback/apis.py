@@ -13,9 +13,12 @@ class CreateUpdateTicketAPIView(CreateAPIView):
     queryset = UpdateTicket.objects.all()
 
 class UpdateLogAPIView(APIView):
-    queryset = UpdateLog.objects.filter(is_published=True).last()
     serializer_class = UpdateLogSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.serializer_class(self.queryset)
-        return Response(serializer.data,200)
+        try:
+            queryset = UpdateLog.objects.filter(is_published=True).latest('created_at')
+            serializer = self.serializer_class(queryset)
+            return Response(serializer.data,200)
+        except Exception:
+            return Response(status=400)
