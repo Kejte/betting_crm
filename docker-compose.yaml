@@ -30,6 +30,32 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
   
+  worker:  
+    build:
+        context: .
+        dockerfile: Dockerfile
+    entrypoint: "celery -A backend.celery worker -l INFO"   
+    env_file:  
+      - .env 
+    volumes:  
+      - .:/code
+    depends_on:  
+      - app   
+      - db
+  
+  celery-beat:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    entrypoint: "celery -A backend.celery beat -l INFO"  
+    env_file:  
+      - .env 
+    volumes:  
+      - .:/code
+    depends_on:  
+      - app   
+      - db
+
 networks:
   default:
     name: "betting"

@@ -18,6 +18,9 @@ drf-spectacular = "^0.28.0"
 drf-spectacular-sidecar = "^2024.12.1"
 setuptools = "^75.7.0"
 six = "^1.17.0"
+celery = "^5.4.0"
+redis = "^5.2.1"
+django-celery-beat = "^2.7.0"
 
 [tool.poetry.requires-plugins]
 poetry-plugin-export = ">=1.8"

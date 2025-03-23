@@ -1,5 +1,6 @@
 from pathlib import Path
 from environs import Env
+from celery.schedules import crontab
 
 env = Env()
 env.read_env()
@@ -26,7 +27,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'payments.apps.PaymentsConfig',
-    'feedback.apps.FeedbackConfig'
+    'feedback.apps.FeedbackConfig',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,15 @@ REST_FRAMEWORK = {
 
 STATIC_URL = 'static/'
 STATIC_ROOT = '/static'
+
+CELERY_BROKER_URL = env.str("REDIS_URL")  
+CELERY_RESULT_BACKEND = env.str("REDIS_URL")
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    "update_expired_payments": {
+        "task": "payments.tasks.update_expired_payments",
+        "schedule": crontab(minute="*"),
+    },
+}
