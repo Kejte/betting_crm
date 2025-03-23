@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from payments.models import Tariff, Payments
+from payments.models import Tariff, Payments, ActivatedTrialPeriod
 from profiles.models import Profile
 
 
@@ -28,4 +28,9 @@ class PaymentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payments
         fields = '__all__'
-        
+
+class ActivatedTrialPeriodSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ActivatedTrialPeriod
+        fields = '__all__'

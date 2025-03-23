@@ -49,6 +49,7 @@ class Payments(models.Model):
     class PaymentStatusChoice(models.TextChoices):
         IN_WORK = ('WR', 'В работе')
         ACCEPTED = ('AC', 'Принято')
+        CANCELED = ('CN', 'Отменен')
         
 
     subscription = models.ForeignKey(
