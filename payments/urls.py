@@ -1,5 +1,5 @@
 from django.urls import path
-from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView
+from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView, ActivatedTrialPeriodAPIView
 
 urlpatterns = [ 
     path(
@@ -25,5 +25,9 @@ urlpatterns = [
     path(
         'subscription',
         SubcriptionAPIView.as_view()
+    ),
+    path(
+        'activate_trial',
+        ActivatedTrialPeriodAPIView.as_view()
     )
 ]

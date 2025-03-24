@@ -157,6 +157,6 @@ CELERY_RESULT_BACKEND = env.str("REDIS_URL")
 CELERY_BEAT_SCHEDULE = {
     "update_expired_payments": {
         "task": "payments.tasks.update_expired_payments",
-        "schedule": crontab(minute="*"),
+        "schedule": crontab(minute='0', hour='0'),
     },
 }

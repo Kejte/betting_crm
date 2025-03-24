@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from payments.models import Tariff, Payments, Subscription, ActivatedTrialPeriod
 from payments.serializers import TariffShortSerializer, TariffSerializer, CreatePaymentsSerializer, ActivatedTrialPeriodSerializer
 from rest_framework.views import APIView
@@ -103,18 +103,46 @@ class SubcriptionAPIView(APIView):
             ]
     )
     def get(self, request: Request, *args, **kwargs):
-        payment = Payments.objects.get(subscription__profile__pk=self.request.query_params.get('tg_id'),is_actual=True)
-        return Response(
-            {
-            'tariff': payment.tariff.title,
-            'remained_days': (payment.expired_at - datetime.datetime.today().date()).days,
-            'cost': payment.tariff.cost
-            }
-        )
+        try:
+            payment = Payments.objects.get(subscription__profile__pk=self.request.query_params.get('tg_id'),is_actual=True)
+            return Response(
+                {
+                'tariff': payment.tariff.title,
+                'remained_days': (payment.expired_at - datetime.datetime.today().date()).days,
+                'cost': payment.tariff.cost
+                }
+            )
+        except Payments.DoesNotExist:
+            return Response(status=400)
 
-class ActivatedTrialPeriodAPIView(CreateAPIView):
-    queryset = ActivatedTrialPeriod.objects.all()
-    serializer_class = ActivatedTrialPeriodSerializer
+class ActivatedTrialPeriodAPIView(APIView):
+    
+    @extend_schema(
+            request=None,
+            responses={
+                200: None,
+                201: None
+            },
+            parameters=[
+                OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True),
+                OpenApiParameter(name='tariff_id', type=OpenApiTypes.INT, required=True)
+            ]
+    )
+    def get(self, request, *args, **kwargs):
+        return Response(status=200) if ActivatedTrialPeriod.objects.filter(profile=self.request.query_params.get('tg_id'), tariff=self.request.query_params.get('tariff_id')).exists() else Response(status=201)
 
-    def get(self, request, *args, **kwargs ):
-        ...
+    def post(self, request, *args, **kwargs):
+        serializer = ActivatedTrialPeriodSerializer(data=request.data)
+        if serializer.is_valid():
+            sub, _ = Subscription.objects.get_or_create(profile=serializer.validated_data['profile'],)
+            Payments.objects.create(
+                subscription=sub,
+                tariff=serializer.validated_data['tariff'],
+                expired_at=datetime.datetime.today() + datetime.timedelta(days=4),
+                is_actual=True,
+                status=Payments.PaymentStatusChoice.ACCEPTED
+            )
+            serializer.save()
+            return Response(status=200)
+        return Response(serializer.errors,status=400)
+        
