@@ -9,7 +9,7 @@ class SecretKeyMiddleware:
         self.get_response = get_respnse
     
     def __call__(self, request: Request,*args, **kwds):
-        if (not 'admin' in request.build_absolute_uri()) and (not 'schema' in request.build_absolute_uri()):
+        if (not 'admin' in request.build_absolute_uri()) and (not 'schema' in request.build_absolute_uri()) and (not 'media' in request.build_absolute_uri()):
             try:
                 if request.headers['Secret-Key'] == SECRET_KEY:
                     return self.get_response(request)
