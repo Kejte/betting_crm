@@ -152,7 +152,9 @@ STATIC_ROOT = '/static'
 CELERY_BROKER_URL = env.str("REDIS_URL")  
 CELERY_RESULT_BACKEND = env.str("REDIS_URL")
 
-
+MEDIA_ROOT = '/media'
+MEDIA_URL = 'media/'
+DOMEN = env.str('DOMEN')
 
 CELERY_BEAT_SCHEDULE = {
     "update_expired_payments": {

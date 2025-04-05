@@ -1,6 +1,9 @@
 from django.db import models
 from profiles.models import Profile
 
+def upload_to_tariff_photo(instance,filename):
+    return f'tariffs/{instance.title}/{filename}'
+
 class Tariff(models.Model):
     title = models.CharField(
         verbose_name='Название'
@@ -21,6 +24,13 @@ class Tariff(models.Model):
         help_text='Дней',
         default=30
     )
+    photo = models.ImageField(
+        verbose_name='Превью тарифа',
+        upload_to=upload_to_tariff_photo,
+        null=True
+    )
+
+
 
     def __str__(self):
         return f'Тариф {self.title}'
@@ -80,6 +90,13 @@ class Payments(models.Model):
         choices=PaymentStatusChoice,
         default=PaymentStatusChoice.IN_WORK
     )
+    promocode = models.ForeignKey(
+        'Promocode',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='payment_promocode',
+        blank=True
+    )
     
     @property
     def cost(self):
@@ -110,3 +127,47 @@ class ActivatedTrialPeriod(models.Model):
     class Meta:
         verbose_name = 'Пробный период'
         verbose_name_plural = 'Пробные периоды'
+
+class Promocode(models.Model):
+    promo = models.CharField(
+        verbose_name='Промокод',
+        max_length=10
+    )
+    tariff = models.ForeignKey(
+        Tariff,
+        verbose_name='Тарифф',
+        on_delete=models.CASCADE,
+        related_name='tariff_promocodes'
+    )
+    remained = models.IntegerField(
+        verbose_name='Осталось использований'
+    )
+    discount = models.IntegerField(
+        verbose_name='Скидка',
+        help_text='руб.'
+    )
+    is_active = models.BooleanField(
+        verbose_name='Активно?',
+        default=False
+    )
+
+    def __str__(self):
+        return f'Промокод тарифа {self.tariff.title}'
+    
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'
+
+class ActivatedPromocode(models.Model):
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE
+    )
+    promocode = models.ForeignKey(
+        Promocode,
+        on_delete=models.CASCADE,
+    )
+    buyed = models.BooleanField(
+        verbose_name='Купили?',
+        default=False
+    ) 

@@ -1,6 +1,6 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
-from payments.models import Tariff, Payments, Subscription, ActivatedTrialPeriod
-from payments.serializers import TariffShortSerializer, TariffSerializer, CreatePaymentsSerializer, ActivatedTrialPeriodSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
+from payments.models import Tariff, Payments, Subscription, ActivatedTrialPeriod, Promocode, ActivatedPromocode
+from payments.serializers import TariffShortSerializer, TariffSerializer, CreatePaymentsSerializer, ActivatedTrialPeriodSerializer, PromocodeSerializer, PromocodeShortSerializer, ActivatedPromocodeSerialzier
 from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
@@ -52,11 +52,17 @@ class CreatePaymentAPIView(APIView):
         if serializer.is_valid():
             sub, _ = Subscription.objects.get_or_create(profile=Profile.objects.get(pk=serializer.data['profile']))
             tariff = Tariff.objects.get(pk=serializer.data['tariff'])
+            print(serializer.data)
+            try:
+                promo = Promocode.objects.get(pk=serializer.data['promocode'])
+            except Exception:
+                promo = None
             if not (Payments.objects.filter(subscription=sub,tariff=tariff,status=Payments.PaymentStatusChoice.IN_WORK).exists()) and not (Payments.objects.filter(subscription=sub,is_actual=True).exists()):
                 payment = Payments.objects.create(
                     subscription=sub,
                     tariff= tariff,
-                    expired_at=datetime.datetime.today() + datetime.timedelta(days=31.0)
+                    expired_at=datetime.datetime.today() + datetime.timedelta(days=31.0),
+                    promocode=promo
                 )
                 return Response({'id': payment.pk},status=200)
             return Response(status=201)
@@ -81,6 +87,9 @@ class UpdatePaymentAPIView(APIView):
             case 'accept':
                 payment.status = Payments.PaymentStatusChoice.ACCEPTED
                 payment.is_actual = True
+                if payment.promocode:
+                    payment.promocode.remained -= 1
+                    payment.promocode.save()
                 payment.save()
             case 'cancel':
                 payment.status = Payments.PaymentStatusChoice.CANCELED
@@ -145,4 +154,75 @@ class ActivatedTrialPeriodAPIView(APIView):
             serializer.save()
             return Response(status=200)
         return Response(serializer.errors,status=400)
-        
+
+class PromocodesAPIView(APIView):
+    
+    @extend_schema(
+        request=None,
+        responses={
+            200: None
+        },
+        parameters=[
+            OpenApiParameter(name='tariff_id', type=OpenApiTypes.INT, required=True),
+        ]
+    )
+    def get(self, request: Request, *args, **kwargs):
+        tariff_id = request.query_params.get('tariff_id')
+        promocodes = Promocode.objects.filter(tariff__pk=tariff_id, is_active=True)
+        serializer = PromocodeShortSerializer(promocodes, many=True)
+        return Response(serializer.data,200)
+
+class PromocodeAPIView(RetrieveAPIView):
+    serializer_class = PromocodeSerializer
+    queryset = Promocode.objects.filter()
+    lookup_field = 'pk'
+
+class ActivatedPromocodeAPIView(APIView):
+
+    @extend_schema(
+            request=None,
+            responses={
+                200: None,
+                201: None
+            },
+            parameters=[
+                OpenApiParameter(name='tariff_id', type=OpenApiTypes.INT, required=True),
+                OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True)
+            ]
+    )
+    def get(self, request: Request, *args, **kwargs):
+        tariff_id = request.query_params.get('tariff_id')
+        tg_id = request.query_params.get('tg_id')
+        if ActivatedPromocode.objects.filter(promocode__tariff__pk=tariff_id, profile__pk=tg_id, buyed=False).exists():
+            return Response(status=201)
+        return Response(status=200)
+
+class CreateActivatedPromocodeAPIView(CreateAPIView):
+    serializer_class = ActivatedPromocodeSerialzier
+    queryset = ActivatedPromocode.objects.all()
+
+class RetrieveActivatedPromocodeAPIView(APIView):
+    
+    @extend_schema(
+        request=None,
+        responses={
+            200: PromocodeSerializer,
+            201: None
+        },
+        parameters=[
+            OpenApiParameter(name='tariff_id', type=OpenApiTypes.INT, required=True),
+            OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True)
+        ]
+    )
+    def get(self, request: Request, *args, **kwargs):
+        try:
+            activated_promo = ActivatedPromocode.objects.get(
+                profile__pk=request.query_params.get('tg_id'),
+                promocode__tariff__pk=request.query_params.get('tariff_id'), 
+                buyed=False
+            )
+            if activated_promo.promocode.is_active:
+                return Response(PromocodeSerializer(Promocode.objects.get(pk=activated_promo.promocode.pk)).data, status=200)
+            return Response(status=201)
+        except ActivatedPromocode.DoesNotExist:
+            return Response(status=201)

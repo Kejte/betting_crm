@@ -9,7 +9,8 @@ class PaymentsConfig(AppConfig):
     verbose_name = 'Платежи'
 
     def ready(self):
-        from .signals import update_payments
+        from .signals import update_payments, update_promocode
 
         setting_changed.connect(update_payments)
+        setting_changed.connect(update_promocode)
         return super().ready()
