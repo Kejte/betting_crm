@@ -61,7 +61,7 @@ class CreatePaymentAPIView(APIView):
                 payment = Payments.objects.create(
                     subscription=sub,
                     tariff= tariff,
-                    expired_at=datetime.datetime.today() + datetime.timedelta(days=31.0),
+                    expired_at=datetime.datetime.today() + datetime.timedelta(days=float(tariff.duration+1)),
                     promocode=promo
                 )
                 return Response({'id': payment.pk},status=200)
