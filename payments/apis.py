@@ -7,7 +7,7 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework.response import Response
 from rest_framework.request import Request
 import datetime
-from profiles.models import Profile
+from profiles.models import Profile, ReferalProgramAccount
 
 
 class TariffsAPIView(ListAPIView):
@@ -90,6 +90,12 @@ class UpdatePaymentAPIView(APIView):
                 if payment.promocode:
                     payment.promocode.remained -= 1
                     payment.promocode.save()
+                if payment.subscription.profile.referrer:
+                    ref = ReferalProgramAccount.objects.get(profile__pk=payment.subscription.profile.referrer.pk)
+                    cost = payment.tariff.cost if not payment.promocode else payment.tariff.cost - payment.promocode.discount
+                    ref.balance += cost * 0.4
+                    ref.total_earnings += cost * 0.4
+                    ref.save()
                 payment.save()
             case 'cancel':
                 payment.status = Payments.PaymentStatusChoice.CANCELED
