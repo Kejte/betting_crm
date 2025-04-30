@@ -6,6 +6,7 @@ from profiles.models import Profile, ReferalProgramAccount
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('username', 'tg_id')
     readonly_fields = ('tg_id', )
+    search_fields = ('username',)
 
 @admin.register(ReferalProgramAccount)
 class ReferalProgramAccountAdmin(admin.ModelAdmin):
