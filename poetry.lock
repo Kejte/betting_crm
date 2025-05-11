@@ -259,6 +259,48 @@ files = [
 pycparser = "*"
 
 [[package]]
+name = "channels"
+version = "4.2.2"
+description = "Brings async, event-driven capabilities to Django."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "channels-4.2.2-py3-none-any.whl", hash = "sha256:ff36a6e1576cacf40bcdc615fa7aece7a709fc4fdd2dc87f2971f4061ffdaa81"},
+    {file = "channels-4.2.2.tar.gz", hash = "sha256:8d7208e48ab8fdb972aaeae8311ce920637d97656ffc7ae5eca4f93f84bcd9a0"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6.0,<4"
+Django = ">=4.2"
+
+[package.extras]
+daphne = ["daphne (>=4.0.0)"]
+tests = ["async-timeout", "coverage (>=4.5,<5.0)", "pytest", "pytest-asyncio", "pytest-django"]
+
+[[package]]
+name = "channels-redis"
+version = "4.2.1"
+description = "Redis-backed ASGI channel layer implementation"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "channels_redis-4.2.1-py3-none-any.whl", hash = "sha256:2ca33105b3a04b5a327a9c47dd762b546f30b76a0cd3f3f593a23d91d346b6f4"},
+    {file = "channels_redis-4.2.1.tar.gz", hash = "sha256:8375e81493e684792efe6e6eca60ef3d7782ef76c6664057d2e5c31e80d636dd"},
+]
+
+[package.dependencies]
+asgiref = ">=3.2.10,<4"
+channels = "*"
+msgpack = ">=1.0,<2.0"
+redis = ">=4.6"
+
+[package.extras]
+cryptography = ["cryptography (>=1.3.0)"]
+tests = ["async-timeout", "cryptography (>=1.3.0)", "pytest", "pytest-asyncio", "pytest-timeout"]
+
+[[package]]
 name = "charset-normalizer"
 version = "3.4.1"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
@@ -2112,4 +2154,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "19a8cfb47c43c6aa9c101a1ca300ab6265ef72787b1ce9556b9a56af1fbeb0a2"
+content-hash = "2387337bd674839ba88dab28a193cb7ac674766bc9665b9114180eb72ea46688"

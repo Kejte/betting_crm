@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'drf_spectacular_sidecar',
     'payments.apps.PaymentsConfig',
     'feedback.apps.FeedbackConfig',
-    'django_celery_beat'
+    'django_celery_beat',
+    'aiogram_dispatcher.apps.AiogramDispatcherConfig'
 ]
 
 MIDDLEWARE = [
@@ -149,8 +150,10 @@ REST_FRAMEWORK = {
 STATIC_URL = 'static/'
 STATIC_ROOT = '/static'
 
-CELERY_BROKER_URL = env.str("REDIS_URL")  
-CELERY_RESULT_BACKEND = env.str("REDIS_URL")
+REDIS_URL = env.str("REDIS_URL")
+
+CELERY_BROKER_URL = REDIS_URL  
+CELERY_RESULT_BACKEND = REDIS_URL
 
 MEDIA_ROOT = '/media'
 MEDIA_URL = 'media/'
@@ -160,5 +163,18 @@ CELERY_BEAT_SCHEDULE = {
     "update_expired_payments": {
         "task": "payments.tasks.update_expired_payments",
         "schedule": crontab(minute='0', hour='0'),
+    },
+    "triggered_send_fokrs_to_private_group":{
+        "task": "aiogram_dispatcher.tasks.triggered_send_fokrs_to_private_group",
+        "schedule": crontab(minute='30')
+    }
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_URL)],
+        },
     },
 }
