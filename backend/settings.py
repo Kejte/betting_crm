@@ -166,7 +166,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     "triggered_send_fokrs_to_private_group":{
         "task": "aiogram_dispatcher.tasks.triggered_send_fokrs_to_private_group",
-        "schedule": crontab(minute='0,10')
+        "schedule": crontab(minute='*/10')
     }
 }
 
