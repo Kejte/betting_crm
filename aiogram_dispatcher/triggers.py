@@ -11,4 +11,13 @@ def send_fokrs_to_private_group():
     }
 
     r.publish('aiogram_events', json.dumps(event_data))
+
+def give_trial_sub(tg_id):
+    r = redis.Redis.from_url(REDIS_URL)
     
+    event_data = {
+        'type': 'give_trial_sub',
+        'payload': {'tg_id': tg_id}
+    }
+
+    r.publish('aiogram_events', json.dumps(event_data))

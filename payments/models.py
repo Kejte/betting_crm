@@ -97,6 +97,10 @@ class Payments(models.Model):
         related_name='payment_promocode',
         blank=True
     )
+    trial = models.BooleanField(
+        'Пробная?',
+        default=False
+    )
     
     @property
     def cost(self):

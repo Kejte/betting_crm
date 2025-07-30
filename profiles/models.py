@@ -55,3 +55,43 @@ class ReferalProgramAccount(models.Model):
     class Meta:
         verbose_name = 'Аккаунт реферальной программы'
         verbose_name_plural = 'Аккаунты реферальной программы'
+    
+class BookmakerFilterModel(models.Model):
+    slug = models.CharField(
+        verbose_name='Букмекеры'
+    )
+    max_coef_first_book = models.FloatField(
+        verbose_name='Максималньый коэффициент первая бк',
+        null=True
+    )
+    min_coef_first_book = models.FloatField(
+        verbose_name='Минимальный коэффициент первая бк',
+        null=True
+    )
+    max_coef_second_book = models.FloatField(
+        verbose_name='Максималньый коэффициент вторая бк',
+        null=True
+    )
+    min_coef_second_book = models.FloatField(
+        verbose_name='Минимальный коэффициент вторая бк',
+        null=True
+    )
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        verbose_name='Создатель фильтра'
+    )
+    name = models.CharField(
+        verbose_name='Название'
+    )
+    surebet_url = models.TextField(
+        verbose_name='Ссылка на surebet',
+        null=True
+    )
+
+    def __str__(self):
+        return f'Фильтр {self.profile.pk} для {self.slug}'
+    
+    class Meta:
+        verbose_name = 'Фильтр'
+        verbose_name_plural = 'Фильтр'

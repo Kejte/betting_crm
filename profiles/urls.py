@@ -1,5 +1,5 @@
 from django.urls import path
-from profiles.apis import ProfileAPIView, CreateProfileAPIView, UpdateProfileAPIView, ReferalProgramAccountAPIView, ListProfilesPkAPIView
+from profiles.apis import ProfileAPIView, CreateProfileAPIView, UpdateProfileAPIView, ReferalProgramAccountAPIView, ListProfilesPkAPIView, BookmakerFilterAPIView, RetrieveBookmakerFilterAPIView
 
 urlpatterns = [ 
     path(
@@ -21,5 +21,13 @@ urlpatterns = [
     path(
         'profiles_pks',
         ListProfilesPkAPIView.as_view()
+    ),
+    path(
+        'bookmaker_filter',
+        BookmakerFilterAPIView.as_view()
+    ),
+    path(
+        'bookmaker_filter/<int:pk>',
+        RetrieveBookmakerFilterAPIView.as_view()
     )
 ]
