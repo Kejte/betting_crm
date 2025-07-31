@@ -47,4 +47,4 @@ class SubscriptionAdmin(admin.ModelAdmin):
     search_fields = ('profile__username',)
     inlines = (PaymentsInline,)
     list_filter = (SubscriptionFilter,)
-    autocomplete_fields = ('profile',)
+    raw_id_fields = ('profile',)
