@@ -6,6 +6,7 @@ from django.db.models import Case, When, BooleanField
 class SubscriptionFilter(SimpleListFilter):
     title = 'С активной подпиской' # or use _('country') for translated title
     parameter_name = 'С активной подпиской'
+    
 
     def lookups(self, request, model_admin):
         return [('С активной подпиской','С активной подпиской')]
@@ -46,3 +47,4 @@ class SubscriptionAdmin(admin.ModelAdmin):
     search_fields = ('profile__username',)
     inlines = (PaymentsInline,)
     list_filter = (SubscriptionFilter,)
+    autocomplete_fields = ('profile',)
