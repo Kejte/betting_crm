@@ -88,6 +88,11 @@ class BookmakerFilterModel(models.Model):
         verbose_name='Ссылка на surebet',
         null=True
     )
+    excluded_bookers = models.JSONField(
+        verbose_name='Исключенные конторы',
+        default=dict,
+        null=True
+    )
 
     def __str__(self):
         return f'Фильтр {self.profile.pk} для {self.slug}'

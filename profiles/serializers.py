@@ -63,5 +63,5 @@ class RetrieveBookmakerFilterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BookmakerFilterModel
-        fields = ('id','max_coef_first_book', 'min_coef_first_book', 'max_coef_second_book', 'min_coef_second_book', 'name', 'slug', 'surebet_url')
+        fields = ('id','max_coef_first_book', 'min_coef_first_book', 'max_coef_second_book', 'min_coef_second_book', 'name', 'slug', 'surebet_url', 'excluded_bookers')
 
