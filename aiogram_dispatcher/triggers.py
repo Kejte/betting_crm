@@ -21,3 +21,13 @@ def give_trial_sub(tg_id):
     }
 
     r.publish('aiogram_events', json.dumps(event_data))
+
+def send_live_forks():
+    r = redis.Redis.from_url(REDIS_URL)
+
+    event_data = {
+        'type': 'send_live_forks',
+        'payload': {}
+    }
+
+    r.publish('aiogram_events', json.dumps(event_data))
