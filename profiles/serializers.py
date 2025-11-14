@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from profiles.models import Profile, ReferalProgramAccount, BookmakerFilterModel
+from profiles.models import Profile, ReferalProgramAccount, BookmakerFilterModel, FreebetFilter
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -65,3 +65,14 @@ class RetrieveBookmakerFilterSerializer(serializers.ModelSerializer):
         model = BookmakerFilterModel
         fields = ('id','max_coef_first_book', 'min_coef_first_book', 'max_coef_second_book', 'min_coef_second_book', 'name', 'slug', 'surebet_url', 'excluded_bookers')
 
+class FreebetFilterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FreebetFilter
+        fields = '__all__'
+
+class FreebetFilterUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FreebetFilter
+        fields = ('excluded_bookers',)

@@ -1,9 +1,9 @@
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
-from profiles.models import Profile, ReferalProgramAccount, BookmakerFilterModel
+from profiles.models import Profile, ReferalProgramAccount, BookmakerFilterModel, FreebetFilter
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
-from profiles.serializers import ProfileSerializer, CreateProfileSerializer, UpdateProfileSerializer, ReferalProgramAccountSerializer, CreateReferalProgramAccountSerializer, ShortBookmakerFilterSerializer, CreateBookmakerFilterSerializer, RetrieveBookmakerFilterSerializer
+from profiles.serializers import ProfileSerializer, CreateProfileSerializer, UpdateProfileSerializer, ReferalProgramAccountSerializer, CreateReferalProgramAccountSerializer, ShortBookmakerFilterSerializer, CreateBookmakerFilterSerializer, RetrieveBookmakerFilterSerializer, FreebetFilterSerializer, FreebetFilterUpdateSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -154,7 +154,6 @@ class BookmakerFilterAPIView(APIView):
         serializer = CreateBookmakerFilterSerializer(data=request.data)
         if serializer.is_valid():
             filter = serializer.save()
-            print(filter)
             return Response(RetrieveBookmakerFilterSerializer(filter).data,status=200)
         return Response(serializer.error_messages,400)
     
@@ -181,3 +180,43 @@ class RetrieveBookmakerFilterAPIView(RetrieveUpdateAPIView):
     lookup_field = 'pk'
     queryset = BookmakerFilterModel.objects.all()
 
+class FreebetFilterAPIView(APIView):
+
+    @extend_schema(
+        request=None,
+        responses={
+            200: FreebetFilterSerializer
+        },
+        parameters=[
+            OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True),
+            OpenApiParameter(name='filter_slug', type=OpenApiTypes.STR, required=True)
+        ]
+    )
+    def get(self, request: Request, *args, **kwargs):
+        tg_id = request.query_params.get('tg_id')
+        slug = request.query_params.get('filter_slug')
+        filter, _ = FreebetFilter.objects.get_or_create(profile_id=tg_id, slug=slug)
+        print(_)
+        return Response(FreebetFilterSerializer(filter).data,200)
+    
+    @extend_schema(
+        request=FreebetFilterUpdateSerializer,
+        responses={
+            200: FreebetFilterSerializer,
+            400: None
+        },
+        parameters=[
+            OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True),
+            OpenApiParameter(name='filter_slug', type=OpenApiTypes.STR, required=True)
+        ]
+    )
+    def put(self, request: Request, *args, **kwargs):
+        serializer = FreebetFilterUpdateSerializer(data=request.data)
+        if serializer.is_valid(): 
+            tg_id = request.query_params.get('tg_id')
+            slug = request.query_params.get('filter_slug')
+            filter = FreebetFilter.objects.get(profile_id=tg_id, slug=slug)
+            filter.excluded_bookers = serializer.data['excluded_bookers']
+            filter.save()
+            return Response(FreebetFilterSerializer(filter).data,200)
+        return Response(serializer.errors, 400)
