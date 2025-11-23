@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
-from payments.models import Tariff, Payments, Subscription, ActivatedTrialPeriod, Promocode, ActivatedPromocode
-from payments.serializers import TariffShortSerializer, TariffSerializer, CreatePaymentsSerializer, ActivatedTrialPeriodSerializer, PromocodeSerializer, PromocodeShortSerializer, ActivatedPromocodeSerialzier
+from payments.models import Tariff, Payments, Subscription, ActivatedTrialPeriod, Promocode, ActivatedPromocode, ObservedTopic, ObservedTopicSettings
+from payments.serializers import TariffShortSerializer, TariffSerializer, CreatePaymentsSerializer, ActivatedTrialPeriodSerializer, PromocodeSerializer, PromocodeShortSerializer, ActivatedPromocodeSerialzier, ObservedTopicSerializer, ObservedTopicSettingSerializer, UpdateObservedTopicSettingsSerializer
 from rest_framework.views import APIView
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
@@ -52,7 +52,6 @@ class CreatePaymentAPIView(APIView):
         if serializer.is_valid():
             sub, _ = Subscription.objects.get_or_create(profile=Profile.objects.get(pk=serializer.data['profile']))
             tariff = Tariff.objects.get(pk=serializer.data['tariff'])
-            print(serializer.data)
             try:
                 promo = Promocode.objects.get(pk=serializer.data['promocode'])
             except Exception:
@@ -124,7 +123,8 @@ class SubcriptionAPIView(APIView):
                 {
                 'tariff': payment.tariff.title,
                 'remained_days': (payment.expired_at - datetime.datetime.today().date()).days,
-                'cost': payment.tariff.cost
+                'cost': payment.tariff.cost,
+                'is_private': payment.tariff.is_private
                 }
             )
         except Payments.DoesNotExist:
@@ -232,3 +232,52 @@ class RetrieveActivatedPromocodeAPIView(APIView):
             return Response(status=201)
         except ActivatedPromocode.DoesNotExist:
             return Response(status=201)
+
+class ListObservedTopics(ListAPIView):
+    queryset = ObservedTopic.objects.all()
+    serializer_class = ObservedTopicSerializer
+
+class ObservedTopicSettingAPIView(APIView):
+
+    @extend_schema(
+        request=None,
+        responses={
+            200: ObservedTopicSettingSerializer
+        },
+        parameters=[
+            OpenApiParameter(name='tg_id', type=OpenApiTypes.INT, required=True),
+            OpenApiParameter(name='topic_id', type=OpenApiTypes.INT, required=True)
+        ]
+    )
+    def get(self, request: Request, *args, **kwargs):
+        profile = Profile.objects.get(tg_id=request.query_params.get('tg_id'))
+        topic = ObservedTopic.objects.get(pk=request.query_params.get('topic_id'))
+        obj, _ = ObservedTopicSettings.objects.get_or_create(profile=profile,topic=topic)
+        return Response(ObservedTopicSettingSerializer(obj).data,status=200)
+    
+    @extend_schema(
+        request=UpdateObservedTopicSettingsSerializer,
+        responses={
+            200: ObservedTopicSettingSerializer,
+            400: None
+        },
+        parameters=[
+            OpenApiParameter(name='topic_id', type=OpenApiTypes.INT, required=True)
+        ]
+    )
+    def put(self, request: Request, *args, **kwargs):
+        serializer = UpdateObservedTopicSettingsSerializer(data=request.data)
+        if serializer.is_valid():
+            setting = ObservedTopicSettings.objects.get(pk=request.query_params.get('topic_id'))
+            if serializer.data['max_profit']:
+                setting.max_profit = serializer.data['max_profit']
+            else:
+                setting.min_profit = serializer.data['min_profit']
+            try:
+                if serializer.data['is_active'] != None:
+                    setting.is_active = serializer.data['is_active']
+            except KeyError:
+                pass
+            setting.save()
+            return Response(ObservedTopicSettingSerializer(setting).data,200)
+        return Response(serializer.errors,400)

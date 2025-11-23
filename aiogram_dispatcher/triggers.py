@@ -31,3 +31,13 @@ def send_live_forks():
     }
 
     r.publish('aiogram_events', json.dumps(event_data))
+
+def notify_expired_private_sub(profiles: list):
+    r = redis.Redis.from_url(REDIS_URL)
+
+    event_data = {
+        'type': 'notify_epired_private_sub',
+        'payload': {'profiles': profiles}
+    }
+
+    r.publish('aiogram_events', json.dumps(event_data))

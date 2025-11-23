@@ -1,5 +1,5 @@
 from django.contrib import admin
-from payments.models import Tariff, Subscription, Payments, Promocode, ActivatedPromocode
+from payments.models import Tariff, Subscription, Payments, Promocode, ActivatedPromocode, ObservedTopic
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Case, When, BooleanField
 
@@ -48,3 +48,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     inlines = (PaymentsInline,)
     list_filter = (SubscriptionFilter,)
     raw_id_fields = ('profile',)
+
+@admin.register(ObservedTopic)
+class ObservedTopicAdmin(admin.ModelAdmin):
+    list_display = ('name',)

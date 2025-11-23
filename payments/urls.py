@@ -1,5 +1,5 @@
 from django.urls import path
-from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView, ActivatedTrialPeriodAPIView, PromocodesAPIView, ActivatedPromocodeAPIView, PromocodeAPIView, CreateActivatedPromocodeAPIView, RetrieveActivatedPromocodeAPIView
+from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView, ActivatedTrialPeriodAPIView, PromocodesAPIView, ActivatedPromocodeAPIView, PromocodeAPIView, CreateActivatedPromocodeAPIView, RetrieveActivatedPromocodeAPIView, ListObservedTopics, ObservedTopicSettingAPIView
 
 urlpatterns = [ 
     path(
@@ -49,6 +49,14 @@ urlpatterns = [
     path(
         'retrieve_activated_promocode',
         RetrieveActivatedPromocodeAPIView.as_view()
+    ),
+    path(
+        'observed_topics',
+        ListObservedTopics.as_view()
+    ),
+    path(
+        'observed_topic_settings',
+        ObservedTopicSettingAPIView.as_view()
     )
 ]
 

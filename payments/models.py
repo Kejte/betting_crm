@@ -29,7 +29,10 @@ class Tariff(models.Model):
         upload_to=upload_to_tariff_photo,
         null=True
     )
-
+    is_private = models.BooleanField(
+        verbose_name='Приватка?',
+        default=False
+    )
 
 
     def __str__(self):
@@ -175,3 +178,45 @@ class ActivatedPromocode(models.Model):
         verbose_name='Купили?',
         default=False
     ) 
+
+class ObservedTopic(models.Model):
+    name = models.CharField(
+        verbose_name='Название топика'
+    )
+    thread_id = models.BigIntegerField(
+        verbose_name='Id топика'
+    )
+    slug = models.CharField(
+        verbose_name='Кеш ключ',
+        default=''
+    )
+
+    class Meta:
+        verbose_name = 'Топик приватки'
+        verbose_name_plural = 'Топики для приватки'
+
+class ObservedTopicSettings(models.Model):
+    topic = models.ForeignKey(
+        ObservedTopic,
+        verbose_name='Топик',
+        on_delete=models.CASCADE
+    )
+    max_profit = models.FloatField(
+        verbose_name='Макмимальный % дохода',
+        null=True
+    )
+    min_profit = models.FloatField(
+        verbose_name='Минимальный % дохода',
+        null=True
+    )
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        default=None
+    )
+    is_active = models.BooleanField(
+        'Активен?',
+        default=False
+    )
+
+
