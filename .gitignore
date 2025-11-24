@@ -13,7 +13,7 @@ pgdata/
 parser_data/
 templates/
 logs/
-celerybeat-schedule
+celerybeat-schedule*
 
 #all static
 /static
