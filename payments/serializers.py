@@ -69,6 +69,7 @@ class ObservedTopicSerializer(serializers.ModelSerializer):
 
 class ObservedTopicSettingSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('_name')
+    slug = serializers.SerializerMethodField('_slug')
 
     class Meta:
         model = ObservedTopicSettings
@@ -76,6 +77,9 @@ class ObservedTopicSettingSerializer(serializers.ModelSerializer):
 
     def _name(self, obj: ObservedTopicSettings):
         return obj.topic.name
+    
+    def _slug(self, obj: ObservedTopicSettings):
+        return obj.topic.slug
 
 class UpdateObservedTopicSettingsSerializer(serializers.ModelSerializer):
 

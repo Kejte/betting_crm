@@ -281,3 +281,7 @@ class ObservedTopicSettingAPIView(APIView):
             setting.save()
             return Response(ObservedTopicSettingSerializer(setting).data,200)
         return Response(serializer.errors,400)
+
+class ActiveObservedTopicSettingAPIView(ListAPIView):
+    serializer_class = ObservedTopicSettingSerializer
+    queryset = ObservedTopicSettings.objects.filter(is_active=True)

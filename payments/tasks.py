@@ -1,6 +1,6 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
-from payments.models import Payments
+from payments.models import Payments, ObservedTopicSettings
 import datetime
 from aiogram_dispatcher.tasks import triger_notify_expired_private_sub
 
@@ -14,3 +14,5 @@ def update_expired_payments():
     payments.update(is_actual=False)
     if len(private_payments) != 0:
         triger_notify_expired_private_sub.delay(private_payments)
+        for private_payment in private_payments:
+            ObservedTopicSettings.objects.filter(profile__tg_id=private_payment['subscription__profile__tg_id']).update(is_active=False)
