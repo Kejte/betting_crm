@@ -271,7 +271,7 @@ class ObservedTopicSettingAPIView(APIView):
             setting = ObservedTopicSettings.objects.get(pk=request.query_params.get('topic_id'))
             if serializer.data['max_profit']:
                 setting.max_profit = serializer.data['max_profit']
-            else:
+            elif serializer.data['min_profit']:
                 setting.min_profit = serializer.data['min_profit']
             try:
                 if serializer.data['is_active'] != None:
