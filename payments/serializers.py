@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from payments.models import Tariff, Payments, ActivatedTrialPeriod, Promocode, ActivatedPromocode, ObservedTopic, ObservedTopicSettings
+from payments.models import Tariff, Payments, ActivatedTrialPeriod, Promocode, ActivatedPromocode, ObservedTopic, ObservedTopicSettings, ArbitraryObservingSetting
 from profiles.models import Profile
 from backend.settings import DOMEN
 
@@ -85,4 +85,16 @@ class UpdateObservedTopicSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ObservedTopicSettings
+        fields = ('max_profit', 'min_profit', 'is_active')
+
+class ArbitraryObservingSettingSerializer(serializers.ModelSerializer):
+
+    class Meta: 
+        model = ArbitraryObservingSetting
+        fields = '__all__'
+
+class UpdateArbitraryObservingSettingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ArbitraryObservingSetting
         fields = ('max_profit', 'min_profit', 'is_active')

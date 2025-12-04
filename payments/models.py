@@ -219,4 +219,26 @@ class ObservedTopicSettings(models.Model):
         default=False
     )
 
-
+class ArbitraryObservingSetting(models.Model):
+    profile = models.ForeignKey(
+        Profile,
+        verbose_name='Профиль',
+        on_delete=models.CASCADE
+    )
+    excluded_bookers = models.JSONField(
+        verbose_name='Исключенные конторы',
+        default=dict,
+        null=True
+    )
+    max_profit = models.FloatField(
+        verbose_name='Макмимальный % дохода',
+        null=True
+    )
+    min_profit = models.FloatField(
+        verbose_name='Минимальный % дохода',
+        null=True
+    )
+    is_active = models.BooleanField(
+        'Активен?',
+        default=False
+    )
