@@ -1,5 +1,5 @@
 from django.urls import path
-from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView, ActivatedTrialPeriodAPIView, PromocodesAPIView, ActivatedPromocodeAPIView, PromocodeAPIView, CreateActivatedPromocodeAPIView, RetrieveActivatedPromocodeAPIView, ListObservedTopics, ObservedTopicSettingAPIView, ActiveObservedTopicSettingAPIView
+from payments.apis import TariffsAPIView, TariffAPIView, HasForkPermissionAPIView, CreatePaymentAPIView, UpdatePaymentAPIView, SubcriptionAPIView, ActivatedTrialPeriodAPIView, PromocodesAPIView, ActivatedPromocodeAPIView, PromocodeAPIView, CreateActivatedPromocodeAPIView, RetrieveActivatedPromocodeAPIView, ListObservedTopics, ObservedTopicSettingAPIView, ActiveObservedTopicSettingAPIView, ArbitraryObservingSettingAPIView
 
 urlpatterns = [ 
     path(
@@ -61,6 +61,10 @@ urlpatterns = [
     path(
         'active_observed_topic',
         ActiveObservedTopicSettingAPIView.as_view()
+    ),
+    path(
+        'arbitrary_observing',
+        ArbitraryObservingSettingAPIView.as_view()
     )
 ]
 
